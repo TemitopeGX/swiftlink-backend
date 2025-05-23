@@ -1,13 +1,13 @@
 import express from "express";
 import { DeliveryService } from "../services/deliveryService";
 import { CreateDeliveryDTO, UpdateDeliveryDTO } from "../models/delivery";
-import { authenticateUser } from "../middleware/auth";
+import auth from "../middleware/auth";
 
 export function createDeliveryRouter(deliveryService: DeliveryService) {
   const router = express.Router();
 
   // Create a new delivery
-  router.post("/", authenticateUser, async (req, res) => {
+  router.post("/", auth, async (req, res) => {
     try {
       const deliveryData: CreateDeliveryDTO = {
         userId: req.user!.id,
@@ -27,7 +27,7 @@ export function createDeliveryRouter(deliveryService: DeliveryService) {
   });
 
   // Get all deliveries for a user
-  router.get("/", authenticateUser, async (req, res) => {
+  router.get("/", auth, async (req, res) => {
     try {
       const deliveries = await deliveryService.getDeliveriesByUserId(
         req.user!.id
@@ -40,7 +40,7 @@ export function createDeliveryRouter(deliveryService: DeliveryService) {
   });
 
   // Get a specific delivery
-  router.get("/:id", authenticateUser, async (req, res) => {
+  router.get("/:id", auth, async (req, res) => {
     try {
       const delivery = await deliveryService.getDeliveryById(req.params.id);
       if (!delivery) {
@@ -54,7 +54,7 @@ export function createDeliveryRouter(deliveryService: DeliveryService) {
   });
 
   // Update a delivery
-  router.patch("/:id", authenticateUser, async (req, res) => {
+  router.patch("/:id", auth, async (req, res) => {
     try {
       const updateData: UpdateDeliveryDTO = {
         status: req.body.status,
@@ -76,7 +76,7 @@ export function createDeliveryRouter(deliveryService: DeliveryService) {
   });
 
   // Delete a delivery
-  router.delete("/:id", authenticateUser, async (req, res) => {
+  router.delete("/:id", auth, async (req, res) => {
     try {
       await deliveryService.deleteDelivery(req.params.id);
       res.status(204).send();

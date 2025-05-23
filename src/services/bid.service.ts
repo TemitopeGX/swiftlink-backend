@@ -95,9 +95,8 @@ export class BidService {
         .set({
           status: "in_progress",
           rider_id: acceptedBid.rider_id,
-          price: acceptedBid.price,
+          price: parseFloat(acceptedBid.price),
           estimated_time: acceptedBid.estimated_time,
-          accepted_bid_id: bidId,
           updated_at: sql`now()`,
         })
         .where("id", "=", deliveryId)
