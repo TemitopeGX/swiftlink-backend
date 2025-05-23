@@ -1,19 +1,20 @@
+import { Generated, Selectable, Insertable, Updateable } from "kysely";
+
 export interface Delivery {
   id: string;
-  user_id: string;
-  pickup_address: string;
-  delivery_address: string;
-  package_type: string;
-  package_details?: string;
-  weight?: string;
-  status: "pending" | "in_progress" | "completed" | "cancelled";
-  price?: string;
-  rider_id?: string;
-  estimated_time?: string;
-  distance?: string;
-  created_at: Date;
-  updated_at: Date;
-  accepted_bid_id?: string;
+  userId: string;
+  pickupAddress: string;
+  deliveryAddress: string;
+  packageType: string;
+  packageDetails?: string | null;
+  weight?: string | null;
+  status: "pending" | "accepted" | "in_progress" | "completed" | "cancelled";
+  price?: number | null;
+  riderId?: string | null;
+  estimatedTime?: string | null;
+  distance?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface User {
@@ -39,10 +40,31 @@ export interface Bid {
 }
 
 export interface Database {
-  deliveries: Delivery;
+  deliveries: DeliveryTable;
   users: User;
   bids: Bid;
 }
+
+export interface DeliveryTable {
+  id: Generated<string>;
+  user_id: string;
+  pickup_address: string;
+  delivery_address: string;
+  package_type: string;
+  package_details?: string | null;
+  weight?: string | null;
+  status: "pending" | "accepted" | "in_progress" | "completed" | "cancelled";
+  price?: number | null;
+  rider_id?: string | null;
+  estimated_time?: string | null;
+  distance?: string | null;
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
+}
+
+export type DBDelivery = Selectable<DeliveryTable>;
+export type NewDelivery = Insertable<DeliveryTable>;
+export type DeliveryUpdate = Updateable<DeliveryTable>;
 
 export interface CreateDeliveryDTO {
   userId: string;
@@ -54,12 +76,11 @@ export interface CreateDeliveryDTO {
 }
 
 export interface UpdateDeliveryDTO {
-  status?: "pending" | "in_progress" | "completed" | "cancelled";
+  status?: "pending" | "accepted" | "in_progress" | "completed" | "cancelled";
   riderId?: string;
-  price?: string;
+  price?: number;
   estimatedTime?: string;
   distance?: string;
-  acceptedBidId?: string;
 }
 
 export interface CreateBidDTO {
